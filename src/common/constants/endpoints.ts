@@ -13,7 +13,6 @@ export const endpoints = {
     candidateById: (id: number | string) => `/fitscore/candidates/${id}`,
   },
   notifications: {
-    create: "/notifications",
     list: "/notifications",
   },
 };
