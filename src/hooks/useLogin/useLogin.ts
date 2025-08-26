@@ -10,8 +10,9 @@ export function useLogin() {
     endpoint: endpoints.auth.login,
     method: "POST",
     config: {
-      onSuccess: async (response: { access_token: string }) => {
-        await setAuthToken(response.access_token);
+      onSuccess: (response: { access_token: string }) => {
+        console.log(response)
+        return setAuthToken(response.access_token);
       },
     },
   });

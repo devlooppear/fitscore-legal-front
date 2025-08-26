@@ -2,6 +2,7 @@
 
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   AppBar,
   Toolbar,
@@ -11,13 +12,21 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
 } from "@mui/material";
+import { useAuth } from "@/hooks/useAuth/useAuth";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { logout, isAuthenticated } = useAuth();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setMobileOpen(false);
   };
 
   const drawer = (
@@ -27,6 +36,17 @@ export default function Navbar() {
           <Typography>Menu Item</Typography>
         </ListItemButton>
       </ListItem>
+
+      {isAuthenticated && (
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <Typography>Sair</Typography>
+          </ListItemButton>
+        </ListItem>
+      )}
     </List>
   );
 

@@ -1,6 +1,7 @@
 import { AuthProvider } from "@/provider/auth/AuthProvider";
 import { IndexedDBProvider } from "@/provider/db/IndexedDBProvider";
 import I18nProvider from "@/provider/i18n/I18nProvider";
+import { ReactQueryProvider } from "@/provider/query/QueryProvider";
 import ThemeRegistry from "@/provider/theme/ThemeRegistry";
 import { MainLayout } from "@/template";
 import type { Metadata } from "next";
@@ -34,11 +35,13 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <IndexedDBProvider>
           <AuthProvider>
-            <ThemeRegistry>
-              <I18nProvider>
-                <MainLayout>{children}</MainLayout>
-              </I18nProvider>
-            </ThemeRegistry>
+            <ReactQueryProvider>
+              <ThemeRegistry>
+                <I18nProvider>
+                  <MainLayout>{children}</MainLayout>
+                </I18nProvider>
+              </ThemeRegistry>
+            </ReactQueryProvider>
           </AuthProvider>
         </IndexedDBProvider>
       </body>

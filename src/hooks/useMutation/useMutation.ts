@@ -20,9 +20,9 @@ export function useMutation<TData = any, TVariables = any>({
         url: endpoint,
         method,
         data: variables,
-        ...config,
       });
       return response.data;
     },
+    ...config,
   });
 }

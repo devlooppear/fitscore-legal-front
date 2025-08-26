@@ -12,7 +12,7 @@ export function useRegister() {
 
   return {
     register: mutation.mutateAsync,
-    isPending: mutation.isPending,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
     error: mutation.error,
     data: mutation.data,
