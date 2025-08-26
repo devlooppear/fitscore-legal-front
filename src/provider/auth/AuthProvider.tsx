@@ -13,7 +13,7 @@ import { Routes } from "@/common/constants/routes";
 import { AuthContextType } from "./interface";
 import { STORES } from "@/common/constants/db";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -28,15 +28,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (storedToken) {
         setToken(storedToken);
 
-        if (pathname === Routes.INTRODUCTION) {
+        if (
+          pathname === Routes.INTRODUCTION ||
+          pathname === Routes.LOGIN ||
+          pathname === Routes.REGISTER
+        ) {
           router.push(Routes.HOME);
         }
       } else {
-        if (pathname !== Routes.INTRODUCTION) {
+        if (
+          pathname !== Routes.INTRODUCTION &&
+          pathname !== Routes.LOGIN &&
+          pathname !== Routes.REGISTER
+        ) {
           router.push(Routes.INTRODUCTION);
         }
       }
     };
+
     checkToken();
   }, [getValue, router, pathname]);
 
@@ -51,17 +60,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     router.push(Routes.INTRODUCTION);
   };
 
+  const getToken = async (): Promise<string | null> => {
+    if (token) return token;
+    const storedToken = await getValue(STORES.AUTH, "token");
+    setToken(storedToken);
+    return storedToken;
+  };
+
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ token, login, logout, isAuthenticated, getToken }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
 };

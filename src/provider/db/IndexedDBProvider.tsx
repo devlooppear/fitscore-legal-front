@@ -10,13 +10,11 @@ class FitsCoreDB extends Dexie {
     super("FitsCoreDB");
     this.version(1).stores({
       auth: "key,value",
-      cache: "key,value",
-      settings: "key,value",
     });
   }
 }
 
-const db = new FitsCoreDB();
+export const db = new FitsCoreDB();
 
 const IndexedDBContext = createContext<IndexedDBContextType | undefined>(
   undefined
