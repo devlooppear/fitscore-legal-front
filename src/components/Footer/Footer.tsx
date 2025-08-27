@@ -8,49 +8,28 @@ import {
   IconButton,
   Link as MuiLink,
 } from "@mui/material";
-import {
-  FaDiscord,
-  FaLinkedin,
-  FaInstagram,
-  FaWhatsapp,
-  FaEnvelope,
-} from "react-icons/fa";
 import Logo from "@/components/Logo/Logo";
 import systemColors from "@/common/constants/systemColors";
 import { Routes } from "@/common/constants/routes";
 import { useAuth } from "@/provider/auth/AuthProvider";
 import { UserType } from "@/enum/userType";
+import { socialLinks } from "@/common/constants/socialLinks";
 
 export default function Footer() {
   const { userType } = useAuth();
 
-  const socialLinks = [
-    {
-      icon: <FaDiscord />,
-      href: "https://discord.com/users/1041801570582528021",
-    },
-    {
-      icon: <FaLinkedin />,
-      href: "https://www.linkedin.com/in/iago-silva-42130b209/",
-    },
-    {
-      icon: <FaInstagram />,
-      href: "https://www.instagram.com/iago.silva.dev/",
-    },
-    { icon: <FaWhatsapp />, href: "https://wa.me/5511941867093" },
-    {
-      icon: <FaEnvelope />,
-      href: "mailto:iago.profissional.developer@gmail.com",
-    },
-  ];
-
-  const quickLinks = [
-    { label: "Notificações", href: Routes.NOTIFICATIONS },
-    { label: "Perfil", href: Routes.PROFILE },
-    ...(userType === UserType.RECRUITER
-      ? [{ label: "Dashboard", href: Routes.DASHBOARD }]
-      : []),
-  ];
+  const quickLinks = userType
+    ? [
+        { label: "Notificações", href: Routes.NOTIFICATIONS },
+        { label: "Perfil", href: Routes.PROFILE },
+        ...(userType === UserType.RECRUITER
+          ? [{ label: "Dashboard", href: Routes.DASHBOARD }]
+          : []),
+      ]
+    : [
+        { label: "Login", href: Routes.LOGIN },
+        { label: "Cadastro", href: Routes.REGISTER },
+      ];
 
   return (
     <Box

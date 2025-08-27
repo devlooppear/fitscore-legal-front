@@ -10,17 +10,11 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import { useIndexedDB } from "@/provider/db/IndexedDBProvider";
 import { Routes } from "@/common/constants/routes";
-import { AuthContextType } from "./interface";
+import { AuthContextType, WhoAmIResponse } from "./interface";
 import { STORES } from "@/common/constants/db";
 import { UserType } from "@/enum/userType";
 import { useQuery } from "@/hooks/useQuery/useQuery";
 import { endpoints } from "@/common/constants/endpoints";
-
-interface WhoAmIResponse {
-  userId: number;
-  email: string;
-  role: UserType;
-}
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -29,6 +23,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [userType, setUserType] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -42,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const checkToken = async () => {
+      setLoading(true);
       const storedToken = await getValue(STORES.AUTH, "token");
       const storedTime = await getValue(STORES.AUTH, "token_time");
       const storedType = (await getValue(
@@ -55,6 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (now - storedTime > oneDay) {
           await logout();
+          setLoading(false);
           return;
         }
 
@@ -69,12 +66,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           router.push(Routes.INTRODUCTION);
         }
       }
+      setLoading(false);
     };
 
     checkToken();
   }, [getValue, router, pathname]);
 
-  const { data: meData } = useQuery<WhoAmIResponse>({
+  const { data: meData, isLoading: meLoading } = useQuery<WhoAmIResponse>({
     queryKey: ["whoAmI"],
     endpoint: endpoints.users.me,
     enabled: !!token && !userType,
@@ -118,7 +116,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, userType, login, logout, isAuthenticated, getToken }}
+      value={{
+        token,
+        userType,
+        login,
+        logout,
+        isAuthenticated,
+        getToken,
+        loading: loading || meLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -7,4 +7,11 @@ export interface AuthContextType {
   logout: () => Promise<void>;
   isAuthenticated: boolean;
   getToken: () => Promise<string | null>;
+  loading: boolean;
+}
+
+export interface WhoAmIResponse {
+  userId: number;
+  email: string;
+  role: UserType;
 }
