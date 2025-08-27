@@ -12,11 +12,12 @@
   },
   "footer": {
     "quickLinks": {
-      "notifications": "Notifications",
-      "profile": "Profile",
-      "dashboard": "Dashboard",
-      "login": "Login",
-      "register": "Register"
+  "notifications": "Notifications",
+  "profile": "Profile",
+  "dashboard": "Dashboard",
+  "fitscore": "Fit Score",
+  "login": "Login",
+  "register": "Register"
     },
     "contact": {
       "email": "iago.profissional.developer@gmail.com",
