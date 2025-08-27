@@ -8,16 +8,59 @@ import {
   FitScoreDescriptions,
   FitScoreClassification,
 } from "@/enum/FitScoreClassification";
-import Loader from "@/components/Loader/Loader";
+import { useTranslation } from "react-i18next";
 
 export default function ProfilePage() {
+  const { t } = useTranslation("profile");
   const { data: fitScore, isLoading, isError } = useMyFitScore();
 
   if (isLoading) {
-    return <Loader inAll />;
+    return <Typography>{t("loading")}</Typography>;
   }
-  if (isError || !fitScore) {
-    return <Typography>Não foi possível carregar seu FitScore.</Typography>;
+
+  if (isError) {
+    return <Typography>{t("error")}</Typography>;
+  }
+
+  if (!fitScore || !fitScore.id) {
+    return (
+      <Box
+        sx={{
+          py: 8,
+          px: 3,
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          userSelect: "none",
+          bgcolor: systemColors.indigo[50],
+        }}
+      >
+        <Card
+          sx={{
+            maxWidth: 480,
+            width: "100%",
+            p: 4,
+            borderRadius: 4,
+            boxShadow: `0px 4px 16px ${systemColors.indigo[200]}`,
+            bgcolor: systemColors.indigo[100],
+            textAlign: "center",
+          }}
+        >
+          <FaMedal size={32} color={systemColors.indigo[600]} />
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: systemColors.indigo[800], mt: 2 }}
+          >
+            {t("noFitScoreTitle")}
+          </Typography>
+          <Divider sx={{ my: 2, bgcolor: systemColors.indigo[300] }} />
+          <Typography variant="body1" sx={{ color: systemColors.indigo[700] }}>
+            {t("noFitScoreMessage")}
+          </Typography>
+        </Card>
+      </Box>
+    );
   }
 
   const formattedDate = new Date(fitScore.createdAt).toLocaleDateString(
@@ -33,6 +76,7 @@ export default function ProfilePage() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        userSelect: "none",
         bgcolor: systemColors.indigo[50],
       }}
     >
@@ -56,7 +100,7 @@ export default function ProfilePage() {
               ml: 1,
             }}
           >
-            Meu FitScore
+            {t("myFitScore")}
           </Typography>
         </Box>
 
@@ -66,7 +110,7 @@ export default function ProfilePage() {
           variant="h6"
           sx={{ color: systemColors.indigo[700], mb: 1 }}
         >
-          {fitScore.user?.name || "Usuário"}
+          {fitScore.user?.name || t("userFallback")}
         </Typography>
         <Typography
           variant="body2"
@@ -76,18 +120,18 @@ export default function ProfilePage() {
         </Typography>
 
         <Typography variant="body1" sx={{ mb: 1 }}>
-          <b>Performance:</b> {fitScore.performance}
+          <b>{t("performance")}:</b> {fitScore.performance}
         </Typography>
         <Typography variant="body1" sx={{ mb: 1 }}>
-          <b>Energia:</b> {fitScore.energy}
+          <b>{t("energy")}:</b> {fitScore.energy}
         </Typography>
         <Typography variant="body1" sx={{ mb: 1 }}>
-          <b>Cultura:</b> {fitScore.culture}
+          <b>{t("culture")}:</b> {fitScore.culture}
         </Typography>
 
         <Box sx={{ mt: 2, mb: 2 }}>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <b>Total:</b> {fitScore.totalScore.toFixed(2)}%
+            <b>{t("total")}:</b> {fitScore.totalScore.toFixed(2)}%
           </Typography>
           <LinearProgress
             variant="determinate"
@@ -104,7 +148,7 @@ export default function ProfilePage() {
         </Box>
 
         <Typography variant="body1" sx={{ mb: 1 }}>
-          <b>Classificação:</b>{" "}
+          <b>{t("classification")}:</b>{" "}
           {FitScoreDescriptions[
             fitScore.classification as FitScoreClassification
           ] || fitScore.classification}
@@ -114,7 +158,7 @@ export default function ProfilePage() {
           variant="caption"
           sx={{ color: systemColors.indigo[500], mt: 2, display: "block" }}
         >
-          Respondido em: {formattedDate}
+          {t("answeredAt")}: {formattedDate}
         </Typography>
       </Card>
     </Box>

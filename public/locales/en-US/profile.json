@@ -1,0 +1,14 @@
+{
+  "loading": "Loading...",
+  "error": "It was not possible to load your FitScore.",
+  "noFitScoreTitle": "No FitScore found",
+  "noFitScoreMessage": "You don’t have a FitScore yet. Take the test to build your profile.",
+  "myFitScore": "My FitScore",
+  "performance": "Performance",
+  "energy": "Energy",
+  "culture": "Culture",
+  "total": "Total",
+  "classification": "Classification",
+  "answeredAt": "Answered on",
+  "userFallback": "User"
+}

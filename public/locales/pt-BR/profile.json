@@ -1,0 +1,14 @@
+{
+  "loading": "Carregando...",
+  "error": "Não foi possível carregar seu FitScore.",
+  "noFitScoreTitle": "Nenhum FitScore encontrado",
+  "noFitScoreMessage": "Você ainda não possui um FitScore. Responda o teste para traçar seu perfil.",
+  "myFitScore": "Meu FitScore",
+  "performance": "Performance",
+  "energy": "Energia",
+  "culture": "Cultura",
+  "total": "Total",
+  "classification": "Classificação",
+  "answeredAt": "Respondido em",
+  "userFallback": "Usuário"
+}
