@@ -9,5 +9,6 @@
   "startTestBtn": "Ir para o teste",
   "dashboardTitle": "Dashboard de Candidatos",
   "dashboardDesc": "Acompanhe os resultados dos candidatos. Lembre-se que só será possível ver o FitScore após o candidato finalizar o teste.",
-  "dashboardBtn": "Ir para Dashboard"
+  "dashboardBtn": "Ir para Dashboard",
+  "defaultFriend": "Amigo"
 }

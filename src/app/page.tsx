@@ -27,7 +27,9 @@ export default function HomePage() {
   const isRecruiter = userType === UserType.RECRUITER;
 
   let firstName = "";
-  if (user && user.email) {
+  if (user && user.name) {
+    firstName = user.name.split(" ")[0];
+  } else if (user && user.email) {
     const emailName = user.email.split("@")[0];
     firstName = emailName.split(/[._-]/)[0];
     firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
@@ -48,9 +50,9 @@ export default function HomePage() {
         sx={{ fontWeight: "bold", color: systemColors.indigo[900] }}
       >
         {isCandidate
-          ? t("greetingCandidate", { name: firstName || "Candidato" })
+          ? t("greetingCandidate", { name: firstName || t("defaultFriend") })
           : isRecruiter
-          ? t("greetingRecruiter")
+          ? t("greetingRecruiter", { name: firstName || t("defaultFriend") })
           : t("greetingDefault")}
       </Typography>
 

@@ -9,5 +9,6 @@
   "startTestBtn": "Ir a la prueba",
   "dashboardTitle": "Panel de Candidatos",
   "dashboardDesc": "Sigue los resultados de los candidatos. Recuerda que solo podrás ver el FitScore después de que el candidato termine la prueba.",
-  "dashboardBtn": "Ir al Panel"
+  "dashboardBtn": "Ir al Panel",
+  "defaultFriend": "Amigo"
 }

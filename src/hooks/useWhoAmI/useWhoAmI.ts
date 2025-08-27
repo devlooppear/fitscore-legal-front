@@ -12,6 +12,7 @@ interface WhoAmIResponse {
   userId: number;
   email: string;
   role: UserType;
+  name?: string;
 }
 
 export function useWhoAmI() {
