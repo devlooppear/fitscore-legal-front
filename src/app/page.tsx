@@ -5,6 +5,8 @@ import { Box, Typography, Divider } from "@mui/material";
 import { FaClipboardList, FaUserCheck } from "react-icons/fa";
 import StyledButton from "@/components/StyledButton/StyledButton";
 import { useAuth } from "@/provider/auth/AuthProvider";
+import { useWhoAmI } from "@/hooks/useWhoAmI/useWhoAmI";
+import { useTranslation } from "react-i18next";
 import { Routes } from "@/common/constants/routes";
 import systemColors from "@/common/constants/systemColors";
 import { useNavTo } from "@/hooks/useNavTo/useNavTo";
@@ -13,6 +15,8 @@ import { UserType } from "@/enum/userType";
 export default function HomePage() {
   const { userType, token } = useAuth();
   const { navTo } = useNavTo();
+  const { user } = useWhoAmI();
+  const { t } = useTranslation("home");
 
   if (!token) {
     navTo(Routes.INTRODUCTION);
@@ -21,6 +25,13 @@ export default function HomePage() {
 
   const isCandidate = userType === UserType.CANDIDATE;
   const isRecruiter = userType === UserType.RECRUITER;
+
+  let firstName = "";
+  if (user && user.email) {
+    const emailName = user.email.split("@")[0];
+    firstName = emailName.split(/[._-]/)[0];
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  }
 
   return (
     <Box
@@ -37,16 +48,14 @@ export default function HomePage() {
         sx={{ fontWeight: "bold", color: systemColors.indigo[900] }}
       >
         {isCandidate
-          ? "Olá, Candidato! 👋"
+          ? t("greetingCandidate", { name: firstName || "Candidato" })
           : isRecruiter
-          ? "Olá, Recrutador! 👋"
-          : "Olá!"}
+          ? t("greetingRecruiter")
+          : t("greetingDefault")}
       </Typography>
 
       <Typography variant="body1" sx={{ color: systemColors.indigo[700] }}>
-        {isCandidate
-          ? "Seja bem-vindo! Seu teste FitScore está disponível. Responda com atenção e dentro do prazo para que possamos avaliar seu perfil."
-          : "Bem-vindo! Aqui você pode acompanhar as avaliações dos candidatos. Fique atento aos prazos e às atualizações do FitScore."}
+        {isCandidate ? t("welcomeCandidate") : t("welcomeRecruiter")}
       </Typography>
 
       <Divider sx={{ bgcolor: systemColors.indigo[200] }} />
@@ -68,13 +77,13 @@ export default function HomePage() {
           >
             <FaClipboardList size={48} color={systemColors.blue[600]} />
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Começar o FitScore
+              {t("startTestTitle")}
             </Typography>
             <Typography variant="body2" sx={{ textAlign: "center" }}>
-              Complete o formulário e descubra seu FitScore LEGAL.
+              {t("startTestDesc")}
             </Typography>
             <StyledButton
-              label="Ir para o teste"
+              label={t("startTestBtn")}
               onClick={() => navTo(Routes.FORM_FITSCORE)}
             />
           </Box>
@@ -96,14 +105,13 @@ export default function HomePage() {
           >
             <FaUserCheck size={48} color={systemColors.indigo[600]} />
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Dashboard de Candidatos
+              {t("dashboardTitle")}
             </Typography>
             <Typography variant="body2" sx={{ textAlign: "center" }}>
-              Acompanhe os resultados dos candidatos. Lembre-se que só será
-              possível ver o FitScore após o candidato finalizar o teste.
+              {t("dashboardDesc")}
             </Typography>
             <StyledButton
-              label="Ir para Dashboard"
+              label={t("dashboardBtn")}
               onClick={() => navTo(Routes.DASHBOARD)}
             />
           </Box>

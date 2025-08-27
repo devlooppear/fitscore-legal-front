@@ -1,0 +1,13 @@
+{
+  "greetingCandidate": "Olá, Candidato {{name}}! 👋",
+  "greetingRecruiter": "Olá, Recrutador {{name}}! 👋",
+  "greetingDefault": "Olá! 👋",
+  "welcomeCandidate": "Seja bem-vindo! Seu teste FitScore está disponível. Responda com atenção e dentro do prazo para que possamos avaliar seu perfil.",
+  "welcomeRecruiter": "Bem-vindo! Aqui você pode acompanhar as avaliações dos candidatos. Fique atento aos prazos e às atualizações do FitScore.",
+  "startTestTitle": "Começar o FitScore",
+  "startTestDesc": "Complete o formulário e descubra seu FitScore LEGAL.",
+  "startTestBtn": "Ir para o teste",
+  "dashboardTitle": "Dashboard de Candidatos",
+  "dashboardDesc": "Acompanhe os resultados dos candidatos. Lembre-se que só será possível ver o FitScore após o candidato finalizar o teste.",
+  "dashboardBtn": "Ir para Dashboard"
+}
