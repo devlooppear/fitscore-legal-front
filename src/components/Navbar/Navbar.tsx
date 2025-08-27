@@ -23,6 +23,8 @@ import Loader from "@/components/Loader/Loader";
 import systemColors from "@/common/constants/systemColors";
 import { useNavTo } from "@/hooks/useNavTo/useNavTo";
 import { routeConfigNav } from "@/common/constants/routeConfigNav";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -43,6 +45,7 @@ export default function Navbar() {
 
   const bottomRoutes = !isAuthenticated ? [Routes.LOGIN, Routes.REGISTER] : [];
 
+  const { t } = useTranslation("common");
   const drawer = (
     <Box
       sx={{
@@ -53,6 +56,7 @@ export default function Navbar() {
         flexDirection: "column",
         justifyContent: "space-between",
         color: "white",
+        position: "relative",
       }}
     >
       <Box>
@@ -64,32 +68,60 @@ export default function Navbar() {
           {mainRoutes.map((route) => (
             <ListItem key={route} disablePadding>
               <ListItemButton
+                sx={{
+                  "&.Mui-selected, &.Mui-selected:hover": {
+                    bgcolor: systemColors.indigo[600],
+                  },
+                  borderRadius: 2,
+                  mx: 1,
+                  my: 0.5,
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: systemColors.indigo[500],
+                  },
+                }}
                 onClick={() => {
                   navTo(route);
                   setMobileOpen(false);
                 }}
               >
-                <ListItemIcon>{routeConfigNav[route]?.icon}</ListItemIcon>
-                <ListItemText primary={routeConfigNav[route]?.label} />
+                <ListItemIcon sx={{ color: "white", minWidth: 36 }}>
+                  {routeConfigNav[route]?.icon}
+                </ListItemIcon>
+                <ListItemText primary={t(`navbar.${getNavKey(route)}`)} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Box>
 
-      <Box>
-        <Divider sx={{ bgcolor: systemColors.blue[200] }} />
+      <Box sx={{ pb: 2 }}>
+        <Divider sx={{ bgcolor: systemColors.blue[200], mb: 1 }} />
+        <Box sx={{ color: "white", width: "100%", maxWidth: "200px", mx: "auto" }}>
+          <LanguageSwitcher />
+        </Box>
         <List>
           {bottomRoutes.map((route) => (
             <ListItem key={route} disablePadding>
               <ListItemButton
+                sx={{
+                  borderRadius: 2,
+                  mx: 1,
+                  my: 0.5,
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: systemColors.indigo[500],
+                  },
+                }}
                 onClick={() => {
                   navTo(route);
                   setMobileOpen(false);
                 }}
               >
-                <ListItemIcon>{routeConfigNav[route]?.icon}</ListItemIcon>
-                <ListItemText primary={routeConfigNav[route]?.label} />
+                <ListItemIcon sx={{ color: "white", minWidth: 36 }}>
+                  {routeConfigNav[route]?.icon}
+                </ListItemIcon>
+                <ListItemText primary={t(`navbar.${getNavKey(route)}`)} />
               </ListItemButton>
             </ListItem>
           ))}
@@ -97,15 +129,24 @@ export default function Navbar() {
           {isAuthenticated && (
             <ListItem disablePadding>
               <ListItemButton
+                sx={{
+                  borderRadius: 2,
+                  mx: 1,
+                  my: 0.5,
+                  color: "white",
+                  "&:hover": {
+                    bgcolor: systemColors.indigo[500],
+                  },
+                }}
                 onClick={() => {
                   logout();
                   setMobileOpen(false);
                 }}
               >
-                <ListItemIcon>
+                <ListItemIcon sx={{ color: "white", minWidth: 36 }}>
                   <LogoutIcon sx={{ color: systemColors.indigo[50] }} />
                 </ListItemIcon>
-                <ListItemText primary="Sair" />
+                <ListItemText primary={t("navbar.logout")} />
               </ListItemButton>
             </ListItem>
           )}
@@ -113,6 +154,29 @@ export default function Navbar() {
       </Box>
     </Box>
   );
+
+  function getNavKey(route: string) {
+    switch (route) {
+      case Routes.HOME:
+        return "home";
+      case Routes.DASHBOARD:
+        return "dashboard";
+      case Routes.FORM_FITSCORE:
+        return "fitscore";
+      case Routes.PROFILE:
+        return "profile";
+      case Routes.NOTIFICATIONS:
+        return "notifications";
+      case Routes.LOGIN:
+        return "login";
+      case Routes.REGISTER:
+        return "register";
+      case Routes.INTRODUCTION:
+        return "introduction";
+      default:
+        return route;
+    }
+  }
 
   return (
     <>

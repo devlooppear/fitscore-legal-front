@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Select, MenuItem, Box, Typography } from "@mui/material";
+import { Select, MenuItem, Box, Typography, Paper } from "@mui/material";
 import { LANGUAGE_OPTIONS, Languages } from "@/enum/language";
 import { getAppLanguage, setAppLanguage } from "@/common/utils/language";
+import systemColors from "@/common/constants/systemColors";
 
 export default function LanguageSwitcher() {
   const [language, setLanguage] = React.useState<Languages>(getAppLanguage());
@@ -15,28 +16,52 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <Select
-      value={language}
-      onChange={handleChange}
-      variant="outlined"
-      size="small"
+    <Box
       sx={{
-        minWidth: 140,
-        fontSize: "0.9rem",
-        backgroundColor: "white",
         borderRadius: 2,
+        bgcolor: systemColors.indigo[500],
+        px: 2,
+        py: 0.5,
+        minWidth: 140,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: `0 2px 8px ${systemColors.indigo[300]}`,
       }}
     >
-      {LANGUAGE_OPTIONS.map((option) => (
-        <MenuItem key={option.code} value={option.code}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Select
+        value={language}
+        onChange={handleChange}
+        variant="standard"
+        disableUnderline
+        size="small"
+        sx={{
+          minWidth: 110,
+          fontSize: "0.95rem",
+          bgcolor: 'transparent',
+          borderRadius: 2,
+          fontWeight: 500,
+          color: systemColors.blue[50],
+          '& .MuiSelect-select': {
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            py: 0.5,
+            color: systemColors.blue[50],
+          },
+        }}
+      >
+        {LANGUAGE_OPTIONS.map((option) => (
+          <MenuItem key={option.code} value={option.code} sx={{ display: 'flex', alignItems: 'center', gap: 1, color: systemColors.blue[700], fontWeight: 500 }}>
             <Typography component="span" sx={{ fontSize: "1.2rem" }}>
               {option.flag}
             </Typography>
-            <Typography component="span">{option.label}</Typography>
-          </Box>
-        </MenuItem>
-      ))}
-    </Select>
+            <Typography component="span" sx={{ fontWeight: 500 }}>
+              {option.label}
+            </Typography>
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
   );
 }

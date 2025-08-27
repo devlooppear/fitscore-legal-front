@@ -1,4 +1,15 @@
 {
+  "navbar": {
+    "home": "Início",
+    "dashboard": "Dashboard",
+    "fitscore": "Fit Score",
+    "profile": "Perfil",
+    "notifications": "Notificações",
+    "login": "Login",
+    "register": "Cadastro",
+    "introduction": "Introdução",
+    "logout": "Sair"
+  },
   "footer": {
     "quickLinks": {
       "notifications": "Notificações",

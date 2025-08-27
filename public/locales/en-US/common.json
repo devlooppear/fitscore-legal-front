@@ -1,4 +1,15 @@
 {
+  "navbar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "fitscore": "Fit Score",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "login": "Login",
+    "register": "Register",
+    "introduction": "Introduction",
+    "logout": "Logout"
+  },
   "footer": {
     "quickLinks": {
       "notifications": "Notifications",
