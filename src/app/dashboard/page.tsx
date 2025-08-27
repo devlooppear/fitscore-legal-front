@@ -9,6 +9,8 @@ import {
   FitScoreClassification,
   FitScoreDescriptions,
 } from "@/enum/FitScoreClassification";
+import * as XLSX from "xlsx";
+import { useState } from "react";
 
 const formatClassification = (
   classification: FitScoreClassification
@@ -22,14 +24,30 @@ const getScoreColor = (score: number): string => {
   return "red";
 };
 
+const handleDownload = (rows: any[], format: "xlsx" | "csv") => {
+  if (format === "xlsx") {
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "FitScores");
+    XLSX.writeFile(workbook, "FitScores.xlsx");
+  } else if (format === "csv") {
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const csv = XLSX.utils.sheet_to_csv(worksheet);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "FitScores.csv";
+    link.click();
+  }
+};
+
 export default function DashboardPage() {
   const { t } = useTranslation("dashboard");
   const { data: fitScoresData, isLoading, isError } = useAllFitScores();
+  const [format, setFormat] = useState<"xlsx" | "csv">("xlsx");
 
   const rows = fitScoresData?.data || [];
   const metadata = fitScoresData?.metadata || {};
-
-  console.log(fitScoresData);
 
   return (
     <Box
@@ -49,6 +67,39 @@ export default function DashboardPage() {
       >
         {t("dashboardTitle")}
       </Typography>
+
+      <Box sx={{ width: "100%", maxWidth: 1000, mb: 2 }}>
+        <select
+          value={format}
+          onChange={(e: any) => setFormat(e.target.value)}
+          style={{
+            padding: "10px",
+            marginRight: "10px",
+            borderRadius: "5px",
+            border: `1px solid ${systemColors.indigo[300]}`,
+            backgroundColor: systemColors.indigo[50],
+            color: systemColors.indigo[800],
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          <option value="xlsx">XLSX</option>
+          <option value="csv">CSV</option>
+        </select>
+        <button
+          onClick={() => handleDownload(rows, format)}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: systemColors.indigo[600],
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          {t("generateReport")}
+        </button>
+      </Box>
 
       <Box sx={{ width: "100%", maxWidth: 1000 }}>
         <DataGrid

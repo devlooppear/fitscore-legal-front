@@ -6,5 +6,9 @@
   "energy": "Energy",
   "culture": "Culture",
   "totalScore": "Total Score",
-  "classification": "Classification"
+  "classification": "Classification",
+  "generateReport": "Generate Report",
+  "selectFormat": "Select Format",
+  "xlsx": "XLSX",
+  "csv": "CSV"
 }
