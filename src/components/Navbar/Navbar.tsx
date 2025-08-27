@@ -25,6 +25,7 @@ import { useNavTo } from "@/hooks/useNavTo/useNavTo";
 import { routeConfigNav } from "@/common/constants/routeConfigNav";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
+import { getNavKey } from "@/common/utils/getNavKey";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -154,29 +155,6 @@ export default function Navbar() {
       </Box>
     </Box>
   );
-
-  function getNavKey(route: string) {
-    switch (route) {
-      case Routes.HOME:
-        return "home";
-      case Routes.DASHBOARD:
-        return "dashboard";
-      case Routes.FORM_FITSCORE:
-        return "fitscore";
-      case Routes.PROFILE:
-        return "profile";
-      case Routes.NOTIFICATIONS:
-        return "notifications";
-      case Routes.LOGIN:
-        return "login";
-      case Routes.REGISTER:
-        return "register";
-      case Routes.INTRODUCTION:
-        return "introduction";
-      default:
-        return route;
-    }
-  }
 
   return (
     <>
