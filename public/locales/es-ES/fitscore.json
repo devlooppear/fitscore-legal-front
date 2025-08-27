@@ -27,7 +27,7 @@
     },
     "p3": {
       "category": "Rendimiento",
-      "question": "¿Qué habilidades técnicas dominas?",
+  "question": "¿Cómo evalúas tu dominio de las habilidades técnicas necesarias para el puesto?",
       "options": {
         "0": "Ninguna",
         "1": "Algunas",

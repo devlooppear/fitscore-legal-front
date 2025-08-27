@@ -27,7 +27,7 @@
     },
     "p3": {
       "category": "Performance",
-      "question": "Quais habilidades técnicas você domina?",
+  "question": "Como você avalia o seu domínio das habilidades técnicas necessárias para a função?",
       "options": {
         "0": "Nenhuma",
         "1": "Algumas",

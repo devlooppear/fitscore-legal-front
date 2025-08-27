@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/provider/auth/AuthProvider";
 import { IndexedDBProvider } from "@/provider/db/IndexedDBProvider";
+import { FitScoreProvider } from "@/provider/fitscore/FitScoreProvider";
 import I18nProvider from "@/provider/i18n/I18nProvider";
 import { ReactQueryProvider } from "@/provider/query/QueryProvider";
 import ThemeRegistry from "@/provider/theme/ThemeRegistry";
@@ -38,7 +39,9 @@ export default function RootLayout({
             <AuthProvider>
               <ThemeRegistry>
                 <I18nProvider>
-                  <MainLayout>{children}</MainLayout>
+                  <FitScoreProvider>
+                    <MainLayout>{children}</MainLayout>
+                  </FitScoreProvider>
                 </I18nProvider>
               </ThemeRegistry>
             </AuthProvider>

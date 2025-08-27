@@ -27,7 +27,7 @@
     },
     "p3": {
       "category": "Performance",
-      "question": "Which technical skills do you master?",
+  "question": "How do you rate your mastery of the technical skills required for the role?",
       "options": {
         "0": "None",
         "1": "Some",
