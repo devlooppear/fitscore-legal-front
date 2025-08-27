@@ -2,10 +2,51 @@
 
 import React, { useState, useEffect } from "react";
 import { useFitScoreAnswers } from "@/hooks/useFitScoreAnswers/useFitScoreAnswers";
+import { useCreateFitScore } from "@/hooks/useCreateFitScore/useCreateFitScore";
+import {
+  FitScoreCalcResult,
+  FitScoreClassification,
+} from "@/enum/FitScoreClassification";
+function calculateFitScore(
+  answers: Record<string, number>
+): FitScoreCalcResult {
+  const perf = [1, 2, 3].map((i) => answers[`p${i}`] ?? 0);
+  const energy = [4, 5, 6].map((i) => answers[`p${i}`] ?? 0);
+  const culture = [7, 8, 9, 10].map((i) => answers[`p${i}`] ?? 0);
+
+  const performance = Math.round(
+    ((perf.reduce((a, b) => a + b, 0) / 3) * 100) / 3
+  );
+  const energyScore = Math.round(
+    ((energy.reduce((a, b) => a + b, 0) / 3) * 100) / 3
+  );
+  const cultureScore = Math.round(
+    ((culture.reduce((a, b) => a + b, 0) / 4) * 100) / 3
+  );
+
+  const totalScore = Math.round((performance + energyScore + cultureScore) / 3);
+
+  let classification: FitScoreClassification;
+  if (totalScore >= 80) classification = FitScoreClassification.FIT_ALTISSIMO;
+  else if (totalScore >= 60)
+    classification = FitScoreClassification.FIT_APROVADO;
+  else if (totalScore >= 40)
+    classification = FitScoreClassification.FIT_QUESTIONAVEL;
+  else classification = FitScoreClassification.FORA_DO_PERFIL;
+
+  return {
+    performance,
+    energy: energyScore,
+    culture: cultureScore,
+    totalScore,
+    classification,
+  };
+}
 import { FaRegSmileBeam } from "react-icons/fa";
 import { Box, Card, Typography, Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import StyledButton from "@/components/StyledButton/StyledButton";
+import Loader from "@/components/Loader/Loader";
 import systemColors from "@/common/constants/systemColors";
 
 export default function FitScorePage() {
@@ -26,6 +67,8 @@ export default function FitScorePage() {
   });
 
   const { answers, setAnswer } = useFitScoreAnswers();
+  const createFitScoreMutation = useCreateFitScore();
+  const [hasSentFitScore, setHasSentFitScore] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [finished, setFinished] = useState(false);
   useEffect(() => {
@@ -45,10 +88,29 @@ export default function FitScorePage() {
     else setFinished(true);
   };
 
+  const allAnswered =
+    Object.keys(answers).length === questions.length &&
+    questions.every((q) => answers[q.key] !== undefined);
 
-  const allAnswered = Object.keys(answers).length === questions.length && questions.every(q => answers[q.key] !== undefined);
-
-  if (finished || allAnswered)
+  if (createFitScoreMutation.isPending) {
+    return <Loader inAll />;
+  }
+  if (finished || allAnswered) {
+    const canSend = Object.keys(answers).length >= 10 && !hasSentFitScore;
+    const fitScoreResult = canSend ? calculateFitScore(answers) : null;
+    const handleSendFitScore = () => {
+      if (!fitScoreResult) return;
+      createFitScoreMutation.mutate(
+        {
+          performance: fitScoreResult.performance,
+          energy: fitScoreResult.energy,
+          culture: fitScoreResult.culture,
+        },
+        {
+          onSuccess: () => setHasSentFitScore(true),
+        }
+      );
+    };
     return (
       <Box
         sx={{
@@ -105,9 +167,24 @@ export default function FitScorePage() {
           >
             {t("congratsMotivation")}
           </Typography>
+          {canSend && (
+            <StyledButton
+              label={
+                createFitScoreMutation.isPending
+                  ? "Enviando..."
+                  : hasSentFitScore
+                  ? "Enviado!"
+                  : "Enviar FitScore"
+              }
+              onClick={handleSendFitScore}
+              disabled={createFitScoreMutation.isPending || hasSentFitScore}
+              sx={{ mt: 2 }}
+            />
+          )}
         </Box>
       </Box>
     );
+  }
 
   return (
     <Box
