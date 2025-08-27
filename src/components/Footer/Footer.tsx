@@ -26,7 +26,6 @@ export default function Footer() {
           label: t("footer.quickLinks.notifications"),
           href: Routes.NOTIFICATIONS,
         },
-        { label: t("footer.quickLinks.profile"), href: Routes.PROFILE },
         ...(userType === UserType.RECRUITER
           ? [
               {
@@ -34,7 +33,12 @@ export default function Footer() {
                 href: Routes.DASHBOARD,
               },
             ]
-          : []),
+          : [
+              {
+                label: t("footer.quickLinks.profile"),
+                href: Routes.PROFILE,
+              },
+            ]),
       ]
     : [
         { label: t("footer.quickLinks.login"), href: Routes.LOGIN },

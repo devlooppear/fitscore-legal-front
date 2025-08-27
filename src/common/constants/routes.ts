@@ -30,7 +30,6 @@ export const RoutesByUser: Record<UserType, RoutePath[]> = {
   [UserType.RECRUITER]: [
     Routes.HOME,
     Routes.DASHBOARD,
-    Routes.PROFILE,
     Routes.NOTIFICATIONS,
   ],
 };
