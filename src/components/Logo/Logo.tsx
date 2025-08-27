@@ -4,6 +4,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import Image from "next/image";
 import { useNavTo } from "@/hooks/useNavTo/useNavTo";
+import { useAuth } from "@/provider/auth/AuthProvider";
 import systemColors from "@/common/constants/systemColors";
 import { Routes } from "@/common/constants/routes";
 
@@ -22,10 +23,16 @@ export default function Logo({ size = "medium", canNav = false }: LogoProps) {
   const dimension =
     typeof size === "number" ? size : sizeMap[size] ?? sizeMap.medium;
   const { navTo } = useNavTo();
+  const { isAuthenticated } = useAuth();
+
+  const handleClick = () => {
+    if (!canNav) return;
+    navTo(isAuthenticated ? Routes.HOME : Routes.INTRODUCTION);
+  };
 
   return (
     <Box
-      onClick={() => canNav && navTo(Routes.HOME)}
+      onClick={handleClick}
       display="flex"
       alignItems="center"
       sx={{

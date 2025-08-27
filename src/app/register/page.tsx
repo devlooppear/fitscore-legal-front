@@ -14,7 +14,7 @@ import { useNavTo } from "@/hooks/useNavTo/useNavTo";
 import systemColors from "@/common/constants/systemColors";
 
 import FormTextField from "@/components/FormTextField/FormTextField";
-import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import StyledButton from "@/components/StyledButton/StyledButton";
 import { Routes } from "@/common/constants/routes";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -130,7 +130,7 @@ export default function RegisterPage() {
               }
             />
 
-            <SubmitButton isLoading={isLoading} label="Registrar" />
+            <StyledButton isLoading={isLoading} label="Registrar" />
           </StyledForm>
 
           <FooterBox>

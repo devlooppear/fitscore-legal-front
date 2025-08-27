@@ -10,7 +10,7 @@ import { useLogin } from "@/hooks/useLogin/useLogin";
 import { loginSchema } from "@/common/schemas/login";
 import { useNavTo } from "@/hooks/useNavTo/useNavTo";
 import FormTextField from "@/components/FormTextField/FormTextField";
-import SubmitButton from "@/components/SubmitButton/SubmitButton";
+import StyledButton from "@/components/StyledButton/StyledButton";
 import { Routes } from "@/common/constants/routes";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
@@ -89,7 +89,7 @@ export default function LoginPage() {
               }
             />
 
-            <SubmitButton isLoading={isLoading} label="Entrar" />
+            <StyledButton isLoading={isLoading} label="Entrar" />
           </StyledForm>
 
           <FooterBox>
