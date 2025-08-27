@@ -1,0 +1,109 @@
+{
+  "congratsTitle": "Congratulations!",
+  "congratsDescription": "You have completed the Mini FitScore™. Your result will be available soon.",
+  "congratsMotivation": "Keep dedicating yourself and growing! Every step counts toward your professional success.",
+  "questionLabel": "Question {{index}} of {{total}}",
+  "categoryLabel": "Category: {{category}}",
+  "questions": {
+    "p1": {
+      "category": "Performance",
+      "question": "What is your experience with projects similar to this role?",
+      "options": {
+        "0": "None",
+        "1": "Little",
+        "2": "Moderate",
+        "3": "Extensive"
+      }
+    },
+    "p2": {
+      "category": "Performance",
+      "question": "How do you usually meet tight deadlines?",
+      "options": {
+        "0": "Cannot meet",
+        "1": "With difficulty",
+        "2": "Most of the time",
+        "3": "Always"
+      }
+    },
+    "p3": {
+      "category": "Performance",
+      "question": "Which technical skills do you master?",
+      "options": {
+        "0": "None",
+        "1": "Some",
+        "2": "Good",
+        "3": "Excellent"
+      }
+    },
+    "p4": {
+      "category": "Energy",
+      "question": "How do you manage your availability across multiple projects?",
+      "options": {
+        "0": "Cannot manage",
+        "1": "With difficulty",
+        "2": "Regularly",
+        "3": "Very well"
+      }
+    },
+    "p5": {
+      "category": "Energy",
+      "question": "How do you react under pressure?",
+      "options": {
+        "0": "Demotivated",
+        "1": "Tense",
+        "2": "Manages",
+        "3": "Fully controlled"
+      }
+    },
+    "p6": {
+      "category": "Energy",
+      "question": "What is your work pace on simultaneous tasks?",
+      "options": {
+        "0": "Slow",
+        "1": "Moderate",
+        "2": "Fast",
+        "3": "Very fast and efficient"
+      }
+    },
+    "p7": {
+      "category": "Culture",
+      "question": "Do you identify with the company's values?",
+      "options": {
+        "0": "No",
+        "1": "A little",
+        "2": "Moderately",
+        "3": "Completely"
+      }
+    },
+    "p8": {
+      "category": "Culture",
+      "question": "How do you contribute to a collaborative environment?",
+      "options": {
+        "0": "Not at all",
+        "1": "A little",
+        "2": "Moderately",
+        "3": "A lot"
+      }
+    },
+    "p9": {
+      "category": "Culture",
+      "question": "Do you adapt easily to the company culture?",
+      "options": {
+        "0": "No",
+        "1": "A little",
+        "2": "Moderately",
+        "3": "Completely"
+      }
+    },
+    "p10": {
+      "category": "Culture",
+      "question": "What motivates you to be part of a team?",
+      "options": {
+        "0": "Nothing",
+        "1": "A little",
+        "2": "Moderately",
+        "3": "A lot"
+      }
+    }
+  }
+}

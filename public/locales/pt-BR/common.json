@@ -1,1 +1,16 @@
-{}
+{
+  "footer": {
+    "quickLinks": {
+      "notifications": "Notificações",
+      "profile": "Perfil",
+      "dashboard": "Dashboard",
+      "login": "Login",
+      "register": "Cadastro"
+    },
+    "contact": {
+      "email": "iago.profissional.developer@gmail.com",
+      "phone": "+55 (11) 94186-7093"
+    },
+    "copyright": "© {{year}} FitScore Legal"
+  }
+}

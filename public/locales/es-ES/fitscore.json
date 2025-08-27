@@ -1,0 +1,109 @@
+{
+  "congratsTitle": "¡Felicidades!",
+  "congratsDescription": "Has completado el Mini FitScore™. Tu resultado estará disponible pronto.",
+  "congratsMotivation": "¡Sigue esforzándote y creciendo! Cada paso cuenta para tu éxito profesional.",
+  "questionLabel": "Pregunta {{index}} de {{total}}",
+  "categoryLabel": "Categoría: {{category}}",
+  "questions": {
+    "p1": {
+      "category": "Rendimiento",
+      "question": "¿Cuál es tu experiencia con proyectos similares a este puesto?",
+      "options": {
+        "0": "Ninguna",
+        "1": "Poca",
+        "2": "Moderada",
+        "3": "Amplia"
+      }
+    },
+    "p2": {
+      "category": "Rendimiento",
+      "question": "¿Cómo sueles cumplir con plazos ajustados?",
+      "options": {
+        "0": "No puedo cumplir",
+        "1": "Con dificultad",
+        "2": "La mayoría de las veces",
+        "3": "Siempre"
+      }
+    },
+    "p3": {
+      "category": "Rendimiento",
+      "question": "¿Qué habilidades técnicas dominas?",
+      "options": {
+        "0": "Ninguna",
+        "1": "Algunas",
+        "2": "Buenas",
+        "3": "Excelentes"
+      }
+    },
+    "p4": {
+      "category": "Energía",
+      "question": "¿Cómo gestionas tu disponibilidad en múltiples proyectos?",
+      "options": {
+        "0": "No puedo",
+        "1": "Con dificultad",
+        "2": "Regularmente",
+        "3": "Muy bien"
+      }
+    },
+    "p5": {
+      "category": "Energía",
+      "question": "¿Cómo reaccionas bajo presión?",
+      "options": {
+        "0": "Desmotivado",
+        "1": "Tenso",
+        "2": "Puede manejar",
+        "3": "Control total"
+      }
+    },
+    "p6": {
+      "category": "Energía",
+      "question": "¿Cuál es tu ritmo de trabajo en tareas simultáneas?",
+      "options": {
+        "0": "Lento",
+        "1": "Moderado",
+        "2": "Rápido",
+        "3": "Muy rápido y eficiente"
+      }
+    },
+    "p7": {
+      "category": "Cultura",
+      "question": "¿Te identificas con los valores de la empresa?",
+      "options": {
+        "0": "No",
+        "1": "Poco",
+        "2": "Moderadamente",
+        "3": "Totalmente"
+      }
+    },
+    "p8": {
+      "category": "Cultura",
+      "question": "¿Cómo contribuyes al ambiente colaborativo?",
+      "options": {
+        "0": "No contribuyo",
+        "1": "Poco",
+        "2": "Moderadamente",
+        "3": "Mucho"
+      }
+    },
+    "p9": {
+      "category": "Cultura",
+      "question": "¿Te adaptas fácilmente a la cultura de la empresa?",
+      "options": {
+        "0": "No",
+        "1": "Poco",
+        "2": "Moderadamente",
+        "3": "Totalmente"
+      }
+    },
+    "p10": {
+      "category": "Cultura",
+      "question": "¿Qué te motiva a formar parte de un equipo?",
+      "options": {
+        "0": "Nada",
+        "1": "Poco",
+        "2": "Moderadamente",
+        "3": "Mucho"
+      }
+    }
+  }
+}

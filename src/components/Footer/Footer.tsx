@@ -8,6 +8,7 @@ import {
   IconButton,
   Link as MuiLink,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import Logo from "@/components/Logo/Logo";
 import systemColors from "@/common/constants/systemColors";
 import { Routes } from "@/common/constants/routes";
@@ -16,19 +17,28 @@ import { UserType } from "@/enum/userType";
 import { socialLinks } from "@/common/constants/socialLinks";
 
 export default function Footer() {
+  const { t } = useTranslation();
   const { userType } = useAuth();
 
   const quickLinks = userType
     ? [
-        { label: "Notificações", href: Routes.NOTIFICATIONS },
-        { label: "Perfil", href: Routes.PROFILE },
+        {
+          label: t("footer.quickLinks.notifications"),
+          href: Routes.NOTIFICATIONS,
+        },
+        { label: t("footer.quickLinks.profile"), href: Routes.PROFILE },
         ...(userType === UserType.RECRUITER
-          ? [{ label: "Dashboard", href: Routes.DASHBOARD }]
+          ? [
+              {
+                label: t("footer.quickLinks.dashboard"),
+                href: Routes.DASHBOARD,
+              },
+            ]
           : []),
       ]
     : [
-        { label: "Login", href: Routes.LOGIN },
-        { label: "Cadastro", href: Routes.REGISTER },
+        { label: t("footer.quickLinks.login"), href: Routes.LOGIN },
+        { label: t("footer.quickLinks.register"), href: Routes.REGISTER },
       ];
 
   return (
@@ -84,7 +94,7 @@ export default function Footer() {
           alignItems={{ xs: "center", sm: "flex-start" }}
         >
           <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-            Links Rápidos
+            {t("footer.quickLinks.title", "Links Rápidos")}
           </Typography>
           {quickLinks.map(({ label, href }, idx) => (
             <MuiLink
@@ -112,12 +122,14 @@ export default function Footer() {
           alignItems={{ xs: "center", sm: "flex-start" }}
         >
           <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-            Contato
+            {t("footer.contact.title", "Contato")}
           </Typography>
           <Typography variant="body2">
-            iago.profissional.developer@gmail.com
+            {t("footer.contact.email", "iago.profissional.developer@gmail.com")}
           </Typography>
-          <Typography variant="body2">+55 (11) 94186-7093</Typography>
+          <Typography variant="body2">
+            {t("footer.contact.phone", "+55 (11) 94186-7093")}
+          </Typography>
         </Box>
       </Box>
 
@@ -128,7 +140,7 @@ export default function Footer() {
         align="center"
         sx={{ color: systemColors.indigo[50], opacity: 0.8 }}
       >
-        © {new Date().getFullYear()} FitScore Legal
+        {t("footer.copyright", { year: new Date().getFullYear() })}
       </Typography>
     </Box>
   );
