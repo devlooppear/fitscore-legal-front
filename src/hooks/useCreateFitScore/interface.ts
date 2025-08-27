@@ -13,4 +13,5 @@ export interface FitScore {
   totalScore: number;
   classification: string;
   user?: any;
+  createdAt: string;
 }

@@ -1,4 +1,4 @@
-import { useQuery } from '../useQuery/useQuery';
+import { useQuery } from '@/hooks/useQuery/useQuery';
 import { endpoints } from '@/common/constants/endpoints';
 import { MyFitScore } from './interface';
 
