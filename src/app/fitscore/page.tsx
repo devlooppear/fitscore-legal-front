@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useIndexedDB } from "@/provider/db/IndexedDBProvider";
 import { useFitScoreAnswers } from "@/hooks/useFitScoreAnswers/useFitScoreAnswers";
 import { useCreateFitScore } from "@/hooks/useCreateFitScore/useCreateFitScore";
 import {
@@ -68,7 +69,14 @@ export default function FitScorePage() {
 
   const { answers, setAnswer } = useFitScoreAnswers();
   const createFitScoreMutation = useCreateFitScore();
+  const { getValue, setValue } = useIndexedDB();
   const [hasSentFitScore, setHasSentFitScore] = useState(false);
+
+  useEffect(() => {
+    getValue("fitscore", "hasFinishFitScore").then((val) => {
+      if (val === true) setHasSentFitScore(true);
+    });
+  }, []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [finished, setFinished] = useState(false);
   useEffect(() => {
@@ -107,7 +115,10 @@ export default function FitScorePage() {
           culture: fitScoreResult.culture,
         },
         {
-          onSuccess: () => setHasSentFitScore(true),
+          onSuccess: async () => {
+            setHasSentFitScore(true);
+            await setValue("fitscore", "hasFinishFitScore", true);
+          },
         }
       );
     };

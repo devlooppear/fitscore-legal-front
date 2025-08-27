@@ -18,6 +18,9 @@ const openDB = (): Promise<IDBDatabase> => {
       if (!db.objectStoreNames.contains("auth")) {
         db.createObjectStore("auth", { keyPath: "key" });
       }
+      if (!db.objectStoreNames.contains("fitscore")) {
+        db.createObjectStore("fitscore", { keyPath: "key" });
+      }
     };
 
     request.onsuccess = () => resolve(request.result);

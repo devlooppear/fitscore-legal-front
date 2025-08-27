@@ -1,5 +1,6 @@
 export const STORES = {
   AUTH: "auth",
+  FITSCORE: "fitscore"
 } as const;
 
 export type StoreNames = (typeof STORES)[keyof typeof STORES];
