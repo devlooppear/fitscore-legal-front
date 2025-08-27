@@ -1,39 +1,65 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useIndexedDB } from "@/provider/db/IndexedDBProvider";
 import { Routes } from "@/common/constants/routes";
 import { AuthContextType } from "./interface";
 import { STORES } from "@/common/constants/db";
+import { UserType } from "@/enum/userType";
+import { useQuery } from "@/hooks/useQuery/useQuery";
+import { endpoints } from "@/common/constants/endpoints";
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+interface WhoAmIResponse {
+  userId: number;
+  email: string;
+  role: UserType;
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [userType, setUserType] = useState<UserType | null>(null);
+
   const router = useRouter();
   const pathname = usePathname();
   const { getValue, setValue, deleteValue } = useIndexedDB();
 
-  const publicRoutes: string[] = [Routes.INTRODUCTION, Routes.LOGIN, Routes.REGISTER];
+  const publicRoutes: string[] = [
+    Routes.INTRODUCTION,
+    Routes.LOGIN,
+    Routes.REGISTER,
+  ];
 
-  // 🔹 Checa token e expiração
   useEffect(() => {
     const checkToken = async () => {
       const storedToken = await getValue(STORES.AUTH, "token");
-      const storedTime = await getValue(STORES.AUTH, "token_time"); // timestamp do login
+      const storedTime = await getValue(STORES.AUTH, "token_time");
+      const storedType = (await getValue(
+        STORES.AUTH,
+        "user_type"
+      )) as UserType | null;
 
       if (storedToken && storedTime) {
         const now = Date.now();
         const oneDay = 24 * 60 * 60 * 1000;
 
         if (now - storedTime > oneDay) {
-          // 🔹 Token expirou
           await logout();
           return;
         }
 
         setToken(storedToken);
+        setUserType(storedType ?? null);
 
         if (publicRoutes.includes(pathname)) {
           router.push(Routes.HOME);
@@ -48,19 +74,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkToken();
   }, [getValue, router, pathname]);
 
-  // 🔹 Login: salva token + timestamp
-  const login = async (newToken: string) => {
+  const { data: meData } = useQuery<WhoAmIResponse>({
+    queryKey: ["whoAmI"],
+    endpoint: endpoints.users.me,
+    enabled: !!token && !userType,
+  });
+
+  useEffect(() => {
+    if (meData && meData.role && !userType) {
+      setUserType(meData.role);
+      setValue(STORES.AUTH, "user_type", meData.role);
+    }
+  }, [meData, userType, setValue]);
+
+  const login = async (newToken: string, type?: UserType) => {
     setToken(newToken);
+    if (type) {
+      setUserType(type);
+      await setValue(STORES.AUTH, "user_type", type);
+    }
     const now = Date.now();
     await setValue(STORES.AUTH, "token", newToken);
     await setValue(STORES.AUTH, "token_time", now);
   };
 
-  // 🔹 Logout: remove token + timestamp
   const logout = async () => {
     setToken(null);
+    setUserType(null);
     await deleteValue(STORES.AUTH, "token");
     await deleteValue(STORES.AUTH, "token_time");
+    await deleteValue(STORES.AUTH, "user_type");
     router.push(Routes.INTRODUCTION);
   };
 
@@ -74,7 +117,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, isAuthenticated, getToken }}>
+    <AuthContext.Provider
+      value={{ token, userType, login, logout, isAuthenticated, getToken }}
+    >
       {children}
     </AuthContext.Provider>
   );

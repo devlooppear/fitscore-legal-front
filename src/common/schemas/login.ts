@@ -1,7 +1,5 @@
 import * as yup from "yup";
-
-const passwordRules =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+import { passwordRules } from "../constants/rules";
 
 export const loginSchema = yup.object({
   email: yup.string().email("Email inválido").required("Email é obrigatório"),

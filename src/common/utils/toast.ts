@@ -1,5 +1,4 @@
-// src/common/utils/toast.ts
-import { toast as reactToast, ToastOptions, TypeOptions } from "react-toastify";
+import { toast as reactToast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const defaultOptions: ToastOptions = {

@@ -1,8 +1,6 @@
 import { UserType } from "@/enum/userType";
 import * as yup from "yup";
-
-const passwordRules =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+import { passwordRules } from "../constants/rules";
 
 export const registerUserSchema = yup
   .object({
@@ -17,10 +15,7 @@ export const registerUserSchema = yup
         (value) => !!value && value.trim().split(" ").length >= 2
       ),
 
-    email: yup
-      .string()
-      .email("Email inválido")
-      .required("Email é obrigatório"),
+    email: yup.string().email("Email inválido").required("Email é obrigatório"),
 
     password: yup
       .string()
@@ -29,6 +24,11 @@ export const registerUserSchema = yup
         "A senha deve ter no mínimo 8 caracteres, incluindo maiúscula, minúscula, número e caractere especial."
       )
       .required("Senha é obrigatória"),
+
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "As senhas devem ser iguais")
+      .required("Confirme sua senha"),
 
     role: yup
       .mixed<UserType>()

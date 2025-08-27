@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { TextField, InputAdornment } from "@mui/material";
 import { FormTextFieldProps } from "./interface";
 
@@ -12,7 +12,8 @@ export default function FormTextField({
   type = "text",
   error,
   icon,
-}: FormTextFieldProps) {
+  endAdornment,
+}: FormTextFieldProps & { endAdornment?: React.ReactNode }) {
   return (
     <Controller
       name={name}
@@ -24,10 +25,16 @@ export default function FormTextField({
           type={type}
           error={!!error}
           helperText={error}
-          InputProps={{
-            startAdornment: icon ? (
-              <InputAdornment position="start">{icon}</InputAdornment>
-            ) : undefined,
+          variant="outlined"
+          slotProps={{
+            input: {
+              startAdornment: icon ? (
+                <InputAdornment position="start">{icon}</InputAdornment>
+              ) : undefined,
+              endAdornment: endAdornment ? (
+                <InputAdornment position="end">{endAdornment}</InputAdornment>
+              ) : undefined,
+            },
           }}
         />
       )}

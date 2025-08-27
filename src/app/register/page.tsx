@@ -1,68 +1,41 @@
 "use client";
 
-import React from "react";
-import { Card, CardContent, Typography, Divider, Box, Link } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import React, { useState } from "react";
+import { Typography, Divider, Box, Link, IconButton } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserType } from "@/enum/userType";
-import { useRouter } from "next/navigation";
+import { toast } from "@/common/utils/toast";
+
 import { useRegister } from "@/hooks/useRegister/useRegister";
 import { RegisterCredentials } from "@/hooks/useRegister/interface";
 import { registerUserSchema } from "@/common/schemas/registerUser";
-import { toast } from "@/common/utils/toast";
+import { useNavTo } from "@/hooks/useNavTo/useNavTo";
 import systemColors from "@/common/constants/systemColors";
-import PersonIcon from "@mui/icons-material/Person";
-import EmailIcon from "@mui/icons-material/Email";
-import LockIcon from "@mui/icons-material/Lock";
+
 import FormTextField from "@/components/FormTextField/FormTextField";
 import SubmitButton from "@/components/SubmitButton/SubmitButton";
 import { Routes } from "@/common/constants/routes";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PersonIcon from "@mui/icons-material/Person";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-const StyledContainer = styled("div")({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "24px",
-});
-
-const StyledCard = styled(Card)({
-  width: "100%",
-  maxWidth: 420,
-  borderRadius: "16px",
-  boxShadow: `0px 8px 24px ${systemColors.gray[300]}`,
-  transition: "transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease",
-  "&:hover": {
-    transform: "translateY(-4px)",
-    boxShadow: `0px 12px 28px ${systemColors.gray[400]}`,
-  },
-});
-
-const StyledCardContent = styled(CardContent)({
-  padding: "32px 24px",
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-});
-
-const StyledForm = styled("form")({
-  display: "flex",
-  flexDirection: "column",
-  gap: 20,
-});
-
-const FooterBox = styled(Box)({
-  display: "flex",
-  justifyContent: "center",
-  gap: 8,
-  marginTop: 12,
-  alignItems: "center",
-});
+import {
+  FooterBox,
+  StyledCard,
+  StyledCardContent,
+  StyledContainer,
+  StyledForm,
+} from "./register.style";
 
 export default function RegisterPage() {
   const { register: registerUser, isLoading, error } = useRegister();
-  const router = useRouter();
+  const { navTo } = useNavTo();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     handleSubmit,
@@ -75,23 +48,18 @@ export default function RegisterPage() {
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
       role: UserType.CANDIDATE,
     },
   });
 
   const onSubmit = async (data: RegisterCredentials) => {
-    const response = await registerUser({
-      ...data,
-      role: UserType.CANDIDATE,
-    });
-
+    const response = await registerUser({ ...data, role: UserType.CANDIDATE });
     if (response) {
       toast.success("Cadastro realizado com sucesso!");
-      router.push(Routes.LOGIN);
-    } else if (error) {
-      toast.error(
-        typeof error === "string" ? error : "Ocorreu um erro no registro"
-      );
+      navTo(Routes.LOGIN);
+    } else {
+      toast.error(typeof error === "string" ? error : "Ocorreu um erro no registro");
     }
   };
 
@@ -101,10 +69,7 @@ export default function RegisterPage() {
         <StyledCardContent>
           <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
             <AccountCircleIcon sx={{ color: systemColors.blue[700] }} />
-            <Typography
-              variant="h5"
-              sx={{ color: systemColors.blue[700], fontWeight: "bold" }}
-            >
+            <Typography variant="h5" sx={{ color: systemColors.blue[700], fontWeight: "bold" }}>
               Criar Conta
             </Typography>
           </Box>
@@ -133,9 +98,36 @@ export default function RegisterPage() {
               name="password"
               control={control}
               label="Senha"
-              type="password"
+              type={showPassword ? "text" : "password"}
               error={errors.password?.message}
               icon={<LockIcon color="primary" />}
+              endAdornment={
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                  size="small"
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              }
+            />
+
+            <FormTextField
+              name="confirmPassword"
+              control={control}
+              label="Confirmar Senha"
+              type={showConfirmPassword ? "text" : "password"}
+              error={errors.confirmPassword?.message}
+              icon={<LockIcon color="primary" />}
+              endAdornment={
+                <IconButton
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                  size="small"
+                >
+                  {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              }
             />
 
             <SubmitButton isLoading={isLoading} label="Registrar" />
@@ -146,7 +138,7 @@ export default function RegisterPage() {
             <Link
               component="button"
               variant="body2"
-              onClick={() => router.push(Routes.LOGIN)}
+              onClick={() => navTo(Routes.LOGIN)}
               sx={{ fontWeight: "bold", cursor: "pointer" }}
             >
               Entrar

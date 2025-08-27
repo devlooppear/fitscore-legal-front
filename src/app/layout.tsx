@@ -33,17 +33,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <IndexedDBProvider>
-          <AuthProvider>
-            <ReactQueryProvider>
+        <ReactQueryProvider>
+          <IndexedDBProvider>
+            <AuthProvider>
               <ThemeRegistry>
                 <I18nProvider>
                   <MainLayout>{children}</MainLayout>
                 </I18nProvider>
               </ThemeRegistry>
-            </ReactQueryProvider>
-          </AuthProvider>
-        </IndexedDBProvider>
+            </AuthProvider>
+          </IndexedDBProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

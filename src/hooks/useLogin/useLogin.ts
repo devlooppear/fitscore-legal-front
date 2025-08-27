@@ -11,7 +11,6 @@ export function useLogin() {
     method: "POST",
     config: {
       onSuccess: (response: { access_token: string }) => {
-        console.log(response)
         return setAuthToken(response.access_token);
       },
     },
