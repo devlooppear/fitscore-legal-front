@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Badge from "@mui/material/Badge";
 import { useAuth } from "@/provider/auth/AuthProvider";
 import { Routes, RoutesByUser, PublicRoutes } from "@/common/constants/routes";
 import Logo from "@/components/Logo/Logo";
@@ -26,11 +28,14 @@ import { routeConfigNav } from "@/common/constants/routeConfigNav";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
 import { getNavKey } from "@/common/utils/getNavKey";
+import { useNotification } from "@/hooks/useNotification/useNotification";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logout, isAuthenticated, userType, loading } = useAuth();
   const { navTo } = useNavTo();
+  const { notifications, metadata } = useNotification();
+  const totalNotifications = metadata?.totalItems || 0;
 
   const toggleDrawer = () => setMobileOpen(!mobileOpen);
 
@@ -162,9 +167,18 @@ export default function Navbar() {
       <AppBar position="sticky" sx={{ bgcolor: systemColors.indigo[400] }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Logo size="small" canNav />
-          <IconButton color="inherit" onClick={toggleDrawer}>
-            <MenuIcon />
-          </IconButton>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {isAuthenticated && (
+              <IconButton color="inherit">
+                <Badge badgeContent={totalNotifications} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            )}
+            <IconButton color="inherit" onClick={toggleDrawer}>
+              <MenuIcon />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
 
