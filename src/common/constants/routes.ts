@@ -2,7 +2,7 @@ import { UserType } from "@/enum/userType";
 
 export const Routes = {
   HOME: "/",
-  FORM_FITSCORE: "/fit-score",
+  FORM_FITSCORE: "/fitscore",
   DASHBOARD: "/dashboard",
   LOGIN: "/login",
   PROFILE: "/profile",
@@ -25,14 +25,12 @@ export const RoutesByUser: Record<UserType, RoutePath[]> = {
     Routes.HOME,
     Routes.FORM_FITSCORE,
     Routes.PROFILE,
-    Routes.INTRODUCTION,
     Routes.NOTIFICATIONS,
   ],
   [UserType.RECRUITER]: [
     Routes.HOME,
     Routes.DASHBOARD,
     Routes.PROFILE,
-    Routes.INTRODUCTION,
     Routes.NOTIFICATIONS,
   ],
 };

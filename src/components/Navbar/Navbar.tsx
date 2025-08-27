@@ -1,18 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
   IconButton,
   Drawer,
-  Typography,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Divider,
+  Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -25,25 +25,19 @@ import LoginIcon from "@mui/icons-material/Login";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import InfoIcon from "@mui/icons-material/Info";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useAuth } from "@/provider/auth/AuthProvider";
 import { Routes, RoutesByUser, PublicRoutes } from "@/common/constants/routes";
 import { UserType } from "@/enum/userType";
+import Logo from "@/components/Logo/Logo";
+import systemColors from "@/common/constants/systemColors";
+import { useNavTo } from "@/hooks/useNavTo/useNavTo";
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { logout, isAuthenticated, userType } = useAuth();
-  const pathname = usePathname();
+  const { navTo } = useNavTo();
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    setMobileOpen(false);
-  };
+  const toggleDrawer = () => setMobileOpen(!mobileOpen);
 
   const availableRoutes = isAuthenticated
     ? userType
@@ -51,72 +45,131 @@ export default function Navbar() {
       : []
     : PublicRoutes;
 
+  const mainRoutes = availableRoutes.filter(
+    (r) => r !== Routes.LOGIN && r !== Routes.REGISTER
+  );
+
+  const bottomRoutes = !isAuthenticated ? [Routes.LOGIN, Routes.REGISTER] : [];
+
   const routeConfig: Record<string, { label: string; icon: React.ReactNode }> =
     {
-      [Routes.HOME]: { label: "Início", icon: <HomeIcon /> },
-      [Routes.DASHBOARD]: { label: "Dashboard", icon: <DashboardIcon /> },
-      [Routes.FORM_FITSCORE]: { label: "Fit Score", icon: <AssignmentIcon /> },
-      [Routes.PROFILE]: { label: "Perfil", icon: <PersonIcon /> },
+      [Routes.HOME]: {
+        label: "Início",
+        icon: <HomeIcon sx={{ color: "white" }} />,
+      },
+      [Routes.DASHBOARD]: {
+        label: "Dashboard",
+        icon: <DashboardIcon sx={{ color: "white" }} />,
+      },
+      [Routes.FORM_FITSCORE]: {
+        label: "Fit Score",
+        icon: <AssignmentIcon sx={{ color: "white" }} />,
+      },
+      [Routes.PROFILE]: {
+        label: "Perfil",
+        icon: <PersonIcon sx={{ color: "white" }} />,
+      },
       [Routes.NOTIFICATIONS]: {
         label: "Notificações",
-        icon: <NotificationsIcon />,
+        icon: <NotificationsIcon sx={{ color: "white" }} />,
       },
-      [Routes.LOGIN]: { label: "Login", icon: <LoginIcon /> },
-      [Routes.REGISTER]: { label: "Cadastro", icon: <AppRegistrationIcon /> },
-      [Routes.INTRODUCTION]: { label: "Introdução", icon: <InfoIcon /> },
+      [Routes.LOGIN]: {
+        label: "Login",
+        icon: <LoginIcon sx={{ color: systemColors.blue[50] }} />,
+      },
+      [Routes.REGISTER]: {
+        label: "Cadastro",
+        icon: <AppRegistrationIcon sx={{ color: systemColors.blue[50] }} />,
+      },
+      [Routes.INTRODUCTION]: {
+        label: "Introdução",
+        icon: <InfoIcon sx={{ color: "white" }} />,
+      },
     };
 
   const drawer = (
-    <List sx={{ width: 250 }}>
-      {availableRoutes.map((route) => (
-        <ListItem key={route} disablePadding>
-          <ListItemButton
-            component={Link}
-            href={route}
-            selected={pathname === route}
-            onClick={() => setMobileOpen(false)}
-          >
-            <ListItemIcon>{routeConfig[route]?.icon}</ListItemIcon>
-            <ListItemText primary={routeConfig[route]?.label} />
-          </ListItemButton>
-        </ListItem>
-      ))}
+    <Box
+      sx={{
+        width: 280,
+        bgcolor: systemColors.indigo[400],
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        color: "white",
+      }}
+    >
+      <Box>
+        <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+          <Logo size="medium" />
+        </Box>
+        <Divider sx={{ bgcolor: systemColors.blue[200] }} />
+        <List>
+          {mainRoutes.map((route) => (
+            <ListItem key={route} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  navTo(route);
+                  setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>{routeConfig[route]?.icon}</ListItemIcon>
+                <ListItemText primary={routeConfig[route]?.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
 
-      {isAuthenticated && (
-        <>
-          <Divider />
-          <ListItem disablePadding>
-            <ListItemButton onClick={handleLogout}>
-              <ListItemIcon>
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText primary="Sair" />
-            </ListItemButton>
-          </ListItem>
-        </>
-      )}
-    </List>
+      <Box>
+        <Divider sx={{ bgcolor: systemColors.blue[200] }} />
+        <List>
+          {bottomRoutes.map((route) => (
+            <ListItem key={route} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  navTo(route);
+                  setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>{routeConfig[route]?.icon}</ListItemIcon>
+                <ListItemText primary={routeConfig[route]?.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+
+          {isAuthenticated && (
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon sx={{ color: systemColors.indigo[50] }} />
+                </ListItemIcon>
+                <ListItemText primary="Sair" />
+              </ListItemButton>
+            </ListItem>
+          )}
+        </List>
+      </Box>
+    </Box>
   );
 
   return (
     <>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            FitScore Legal
-          </Typography>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="end"
-            onClick={handleDrawerToggle}
-          >
+      <AppBar position="sticky" sx={{ bgcolor: systemColors.indigo[400] }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Logo size="small" canNav/>
+          <IconButton color="inherit" onClick={toggleDrawer}>
             <MenuIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="right" open={mobileOpen} onClose={handleDrawerToggle}>
+      <Drawer anchor="right" open={mobileOpen} onClose={toggleDrawer}>
         {drawer}
       </Drawer>
     </>
