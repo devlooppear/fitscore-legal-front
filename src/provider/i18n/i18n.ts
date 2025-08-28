@@ -13,6 +13,7 @@ const DEFAULT_NAMESPACES = [
   "profile",
   "home",
   "notifications",
+  "introduction",
 ];
 
 i18n

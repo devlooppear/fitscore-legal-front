@@ -3,28 +3,25 @@ import systemColors from "./systemColors";
 
 export interface IntroductionFeature {
   icon: React.ReactNode;
-  title: string;
-  description: string;
-  actions?: { label: string; onClick: () => void }[];
+  titleKey: string;
+  descriptionKey: string;
+  actions?: { labelKey: string; onClick: () => void }[];
 }
 
 export const introductionFeatures: Omit<IntroductionFeature, "actions">[] = [
   {
     icon: <FaChartLine size={40} color={systemColors.indigo[800]} />,
-    title: "Avaliação Dinâmica",
-    description:
-      "Receba um FitScore completo baseado em Performance, Energia e Cultura para cada candidato.",
+    titleKey: "features.dynamicEvaluation.title",
+    descriptionKey: "features.dynamicEvaluation.description",
   },
   {
     icon: <FaBell size={40} color={systemColors.indigo[800]} />,
-    title: "Notificações Automáticas",
-    description:
-      "Alertas imediatos sobre resultados dos candidatos para manter o processo atualizado.",
+    titleKey: "features.notifications.title",
+    descriptionKey: "features.notifications.description",
   },
   {
     icon: <FaUserPlus size={40} color={systemColors.indigo[800]} />,
-    title: "Comece Agora",
-    description:
-      "Crie sua conta ou faça login se já possui cadastro e comece a avaliar candidatos.",
+    titleKey: "features.getStarted.title",
+    descriptionKey: "features.getStarted.description",
   },
 ];

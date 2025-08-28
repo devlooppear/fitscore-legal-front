@@ -7,17 +7,25 @@ import { Routes } from "@/common/constants/routes";
 import systemColors from "@/common/constants/systemColors";
 import FeatureCard from "@/components/FeatureCard/FeatureCard";
 import { introductionFeatures } from "@/common/constants/introduction";
+import { useTranslation } from "react-i18next";
 
 export default function IntroductionPage() {
   const { navTo } = useNavTo();
+  const { t } = useTranslation("introduction");
 
   const featuresWithActions = introductionFeatures.map((feature) =>
-    feature.title === "Comece Agora"
+    feature.titleKey === "features.getStarted.title"
       ? {
           ...feature,
           actions: [
-            { label: "Cadastre-se", onClick: () => navTo(Routes.REGISTER) },
-            { label: "Login", onClick: () => navTo(Routes.LOGIN) },
+            {
+              labelKey: "features.getStarted.actions.register",
+              onClick: () => navTo(Routes.REGISTER),
+            },
+            {
+              labelKey: "features.getStarted.actions.login",
+              onClick: () => navTo(Routes.LOGIN),
+            },
           ],
         }
       : feature
@@ -45,7 +53,7 @@ export default function IntroductionPage() {
           textAlign: "center",
         }}
       >
-        Bem-vindo ao FitScore LEGAL™
+        {t("title")}
       </Typography>
 
       <Typography
@@ -57,10 +65,7 @@ export default function IntroductionPage() {
           mb: 4,
         }}
       >
-        Nosso sistema de avaliação de candidatos fornece análises dinâmicas de
-        Performance, Energia e Cultura, com notificações automáticas e
-        resultados em tempo real. Agilize seu processo seletivo de forma
-        transparente e eficiente.
+        {t("subtitle")}
       </Typography>
 
       <Divider
@@ -89,8 +94,7 @@ export default function IntroductionPage() {
           maxWidth: 700,
         }}
       >
-        FitScore LEGAL™ — Tornando o processo seletivo mais transparente e
-        eficiente para sua empresa.
+        {t("footer")}
       </Typography>
     </Box>
   );

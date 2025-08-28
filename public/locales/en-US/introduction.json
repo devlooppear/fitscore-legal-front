@@ -1,0 +1,23 @@
+{
+  "title": "Welcome to FitScore LEGAL™",
+  "subtitle": "Our candidate evaluation system provides dynamic analysis of Performance, Energy, and Culture, with automatic notifications and real-time results. Streamline your recruitment process in a transparent and efficient way.",
+  "footer": "FitScore LEGAL™ — Making the recruitment process more transparent and efficient for your company.",
+  "features": {
+    "dynamicEvaluation": {
+      "title": "Dynamic Evaluation",
+      "description": "Receive a complete FitScore based on Performance, Energy, and Culture for each candidate."
+    },
+    "notifications": {
+      "title": "Automatic Notifications",
+      "description": "Instant alerts about candidate results to keep the process up to date."
+    },
+    "getStarted": {
+      "title": "Get Started",
+      "description": "Create your account or log in if you already have one and start evaluating candidates.",
+      "actions": {
+        "register": "Sign Up",
+        "login": "Login"
+      }
+    }
+  }
+}

@@ -4,20 +4,23 @@ import React from "react";
 import { Card, Typography, Box } from "@mui/material";
 import systemColors from "@/common/constants/systemColors";
 import StyledButton from "@/components/StyledButton/StyledButton";
+import { useTranslation } from "react-i18next";
 
 export interface FeatureCardProps {
   icon: React.ReactNode;
-  title: string;
-  description: string;
-  actions?: { label: string; onClick: () => void }[];
+  titleKey: string;
+  descriptionKey: string;
+  actions?: { labelKey: string; onClick: () => void }[];
 }
 
 export default function FeatureCard({
   icon,
-  title,
-  description,
+  titleKey,
+  descriptionKey,
   actions,
 }: FeatureCardProps) {
+  const { t } = useTranslation("introduction");
+
   return (
     <Card
       sx={{
@@ -38,17 +41,19 @@ export default function FeatureCard({
       }}
     >
       {icon}
+
       <Typography
         variant="h6"
         sx={{ mt: 2, mb: 1, fontWeight: "bold", textAlign: "center" }}
       >
-        {title}
+        {t(titleKey)}
       </Typography>
+
       <Typography
         variant="body2"
         sx={{ textAlign: "center", color: systemColors.blue[900] }}
       >
-        {description}
+        {t(descriptionKey)}
       </Typography>
 
       {actions && (
@@ -64,7 +69,7 @@ export default function FeatureCard({
           {actions.map((action, idx) => (
             <StyledButton
               key={idx}
-              label={action.label}
+              label={t(action.labelKey)}
               onClick={action.onClick}
             />
           ))}
