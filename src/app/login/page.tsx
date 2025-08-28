@@ -9,6 +9,7 @@ import { toast } from "@/common/utils/toast";
 import { useLogin } from "@/hooks/useLogin/useLogin";
 import { loginSchema } from "@/common/schemas/login";
 import { useNavTo } from "@/hooks/useNavTo/useNavTo";
+import { useAuth } from "@/provider/auth/AuthProvider";
 import FormTextField from "@/components/FormTextField/FormTextField";
 import StyledButton from "@/components/StyledButton/StyledButton";
 import { Routes } from "@/common/constants/routes";
@@ -29,6 +30,7 @@ import { LoginFormData } from "./interface";
 
 export default function LoginPage() {
   const { login, isLoading, error } = useLogin();
+  const { refetchUser } = useAuth();
   const { navTo } = useNavTo();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -45,10 +47,19 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data);
-      toast.success("Login realizado com sucesso!");
-      navTo(Routes.HOME);
+
+      setTimeout(async () => {
+        if (refetchUser) {
+          await refetchUser();
+        }
+
+        toast.success("Login realizado com sucesso!");
+        navTo(Routes.HOME);
+      }, 300);
     } catch {
-      toast.error(typeof error === "string" ? error : "Falha ao realizar login");
+      toast.error(
+        typeof error === "string" ? error : "Falha ao realizar login"
+      );
     }
   };
 
@@ -56,9 +67,17 @@ export default function LoginPage() {
     <StyledContainer>
       <StyledCard>
         <StyledCardContent>
-          <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            gap={1}
+          >
             <AccountCircleIcon sx={{ color: systemColors.blue[700] }} />
-            <Typography variant="h5" sx={{ color: systemColors.blue[700], fontWeight: "bold" }}>
+            <Typography
+              variant="h5"
+              sx={{ color: systemColors.blue[700], fontWeight: "bold" }}
+            >
               Login
             </Typography>
           </Box>
@@ -83,7 +102,11 @@ export default function LoginPage() {
               error={errors.password?.message}
               icon={<LockIcon color="primary" />}
               endAdornment={
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" size="small">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                  size="small"
+                >
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </IconButton>
               }

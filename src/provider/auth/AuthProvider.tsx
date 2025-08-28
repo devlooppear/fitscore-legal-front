@@ -15,6 +15,7 @@ import { STORES } from "@/common/constants/db";
 import { UserType } from "@/enum/userType";
 import { useQuery } from "@/hooks/useQuery/useQuery";
 import { endpoints } from "@/common/constants/endpoints";
+import Loader from "@/components/Loader/Loader";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -22,6 +23,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [tokenForQuery, setTokenForQuery] = useState<string | null>(null);
   const [userType, setUserType] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,10 +42,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       const storedToken = await getValue(STORES.AUTH, "token");
       const storedTime = await getValue(STORES.AUTH, "token_time");
-      const storedType = (await getValue(
-        STORES.AUTH,
-        "user_type"
-      )) as UserType | null;
 
       if (storedToken && storedTime) {
         const now = Date.now();
@@ -56,13 +54,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setToken(storedToken);
-        setUserType(storedType ?? null);
+        setTokenForQuery(storedToken);
 
         if (publicRoutes.includes(pathname)) {
           router.push(Routes.HOME);
         }
       } else {
-        if (!publicRoutes.includes(pathname)) {
+        if (!token && !publicRoutes.includes(pathname)) {
           router.push(Routes.INTRODUCTION);
         }
       }
@@ -70,34 +68,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     checkToken();
-  }, [getValue, router, pathname]);
+  }, [getValue, router, pathname, token]);
 
-  const { data: meData, isLoading: meLoading } = useQuery<WhoAmIResponse>({
+  const {
+    data: meData,
+    isLoading: meLoading,
+    refetch,
+  } = useQuery<WhoAmIResponse>({
     queryKey: ["whoAmI"],
     endpoint: endpoints.users.me,
-    enabled: !!token && !userType,
+    enabled: !!tokenForQuery,
   });
 
   useEffect(() => {
-    if (meData && meData.role && !userType) {
+    if (meData?.role) {
       setUserType(meData.role);
       setValue(STORES.AUTH, "user_type", meData.role);
     }
-  }, [meData, userType, setValue]);
+  }, [meData, setValue]);
 
   const login = async (newToken: string, type?: UserType) => {
     setToken(newToken);
+    setTokenForQuery(newToken);
+
     if (type) {
       setUserType(type);
       await setValue(STORES.AUTH, "user_type", type);
     }
+
     const now = Date.now();
     await setValue(STORES.AUTH, "token", newToken);
     await setValue(STORES.AUTH, "token_time", now);
+
+    if (!type && refetch) {
+      await refetch();
+    }
   };
 
   const logout = async () => {
     setToken(null);
+    setTokenForQuery(null);
     setUserType(null);
     await deleteValue(STORES.AUTH, "token");
     await deleteValue(STORES.AUTH, "token_time");
@@ -124,9 +134,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated,
         getToken,
         loading: loading || meLoading,
+        refetchUser: refetch,
       }}
     >
-      {children}
+      {loading || meLoading ? <Loader inAll /> : children}
     </AuthContext.Provider>
   );
 };

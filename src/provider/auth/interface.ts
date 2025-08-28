@@ -1,4 +1,5 @@
 import { UserType } from "@/enum/userType";
+import { QueryObserverResult } from "@tanstack/react-query";
 
 export interface AuthContextType {
   token: string | null;
@@ -8,6 +9,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   getToken: () => Promise<string | null>;
   loading: boolean;
+  refetchUser?: () => Promise<QueryObserverResult<WhoAmIResponse, Error>>;
 }
 
 export interface WhoAmIResponse {
