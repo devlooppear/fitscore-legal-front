@@ -1,57 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useIndexedDB } from "@/provider/db/IndexedDBProvider";
 import { useFitScoreAnswers } from "@/hooks/useFitScoreAnswers/useFitScoreAnswers";
 import { useCreateFitScore } from "@/hooks/useCreateFitScore/useCreateFitScore";
-import {
-  FitScoreCalcResult,
-  FitScoreClassification,
-} from "@/enum/FitScoreClassification";
-function calculateFitScore(
-  answers: Record<string, number>
-): FitScoreCalcResult {
-  const perf = [1, 2, 3].map((i) => answers[`p${i}`] ?? 0);
-  const energy = [4, 5, 6].map((i) => answers[`p${i}`] ?? 0);
-  const culture = [7, 8, 9, 10].map((i) => answers[`p${i}`] ?? 0);
-
-  const performance = Math.round(
-    ((perf.reduce((a, b) => a + b, 0) / 3) * 100) / 3
-  );
-  const energyScore = Math.round(
-    ((energy.reduce((a, b) => a + b, 0) / 3) * 100) / 3
-  );
-  const cultureScore = Math.round(
-    ((culture.reduce((a, b) => a + b, 0) / 4) * 100) / 3
-  );
-
-  const totalScore = Math.round((performance + energyScore + cultureScore) / 3);
-
-  let classification: FitScoreClassification;
-  if (totalScore >= 80) classification = FitScoreClassification.FIT_ALTISSIMO;
-  else if (totalScore >= 60)
-    classification = FitScoreClassification.FIT_APROVADO;
-  else if (totalScore >= 40)
-    classification = FitScoreClassification.FIT_QUESTIONAVEL;
-  else classification = FitScoreClassification.FORA_DO_PERFIL;
-
-  return {
-    performance,
-    energy: energyScore,
-    culture: cultureScore,
-    totalScore,
-    classification,
-  };
-}
-import { FaRegSmileBeam } from "react-icons/fa";
+import { useMyFitScore } from "@/hooks/useMyFitScore/useMyFitScore";
+import { FaRegSmileBeam, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Box, Card, Typography, Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import StyledButton from "@/components/StyledButton/StyledButton";
 import Loader from "@/components/Loader/Loader";
 import systemColors from "@/common/constants/systemColors";
+import { calculateFitScore } from "@/common/utils/calculateFitScore";
 
 export default function FitScorePage() {
   const { t } = useTranslation("fitscore");
+  const { answers, setAnswer } = useFitScoreAnswers();
+  const createFitScoreMutation = useCreateFitScore();
+  const { myFitScore, refetch, isLoading, isError, error } = useMyFitScore();
 
   const questions = Array.from({ length: 10 }, (_, i) => {
     const key = `p${i + 1}`;
@@ -67,61 +32,53 @@ export default function FitScorePage() {
     };
   });
 
-  const { answers, setAnswer } = useFitScoreAnswers();
-  const createFitScoreMutation = useCreateFitScore();
-  const { getValue, setValue } = useIndexedDB();
-  const [hasSentFitScore, setHasSentFitScore] = useState(false);
-
-  useEffect(() => {
-    getValue("fitscore", "hasFinishFitScore").then((val) => {
-      if (val === true) setHasSentFitScore(true);
-    });
-  }, []);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [finished, setFinished] = useState(false);
-  useEffect(() => {
-    const firstUnanswered = questions.findIndex(
-      (q) => answers[q.key] === undefined
-    );
-    if (firstUnanswered !== -1) setCurrentIndex(firstUnanswered);
-    else if (Object.keys(answers).length === questions.length)
-      setCurrentIndex(questions.length - 1);
-  }, [questions, answers]);
+  const [currentAnswer, setCurrentAnswer] = useState<number | undefined>(
+    undefined
+  );
+  const [answersTemp, setAnswersTemp] = useState<Record<string, number>>({});
 
   const current = questions[currentIndex];
 
-  const handleAnswer = (value: number) => {
-    setAnswer(current.key, value);
-    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
-    else setFinished(true);
+  useEffect(() => {
+    setCurrentAnswer(answersTemp[current.key]);
+  }, [currentIndex]);
+
+  const allAnswered = questions.every((q) => answersTemp[q.key] !== undefined);
+
+  const handleSelectOption = (value: number) => {
+    setCurrentAnswer(value);
+    setAnswersTemp((prev) => ({ ...prev, [current.key]: value }));
   };
 
-  const allAnswered =
-    Object.keys(answers).length === questions.length &&
-    questions.every((q) => answers[q.key] !== undefined);
+  const handleNext = () => {
+    if (currentAnswer === undefined) return;
+    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
+  };
 
-  if (createFitScoreMutation.isPending) {
-    return <Loader inAll />;
-  }
-  if (finished || allAnswered) {
-    const canSend = Object.keys(answers).length >= 10 && !hasSentFitScore;
-    const fitScoreResult = canSend ? calculateFitScore(answers) : null;
-    const handleSendFitScore = () => {
-      if (!fitScoreResult) return;
-      createFitScoreMutation.mutate(
-        {
-          performance: fitScoreResult.performance,
-          energy: fitScoreResult.energy,
-          culture: fitScoreResult.culture,
-        },
-        {
-          onSuccess: async () => {
-            setHasSentFitScore(true);
-            await setValue("fitscore", "hasFinishFitScore", true);
-          },
-        }
-      );
-    };
+  const handleBack = () => {
+    const prevIndex = Math.max(currentIndex - 1, 0);
+    setCurrentIndex(prevIndex);
+  };
+
+  const handleSendFitScore = async () => {
+    Object.entries(answersTemp).forEach(([key, value]) =>
+      setAnswer(key, value)
+    );
+
+    const fitScoreResult = calculateFitScore(answersTemp);
+    await createFitScoreMutation.mutateAsync({
+      performance: fitScoreResult.performance,
+      energy: fitScoreResult.energy,
+      culture: fitScoreResult.culture,
+    });
+    await refetch();
+  };
+
+  if (isLoading || createFitScoreMutation.isPending) return <Loader inAll />;
+  if (isError) return <div>{String(error)}</div>;
+
+  if (myFitScore.hasFitScore) {
     return (
       <Box
         sx={{
@@ -178,20 +135,6 @@ export default function FitScorePage() {
           >
             {t("congratsMotivation")}
           </Typography>
-          {canSend && (
-            <StyledButton
-              label={
-                createFitScoreMutation.isPending
-                  ? "Enviando..."
-                  : hasSentFitScore
-                  ? "Enviado!"
-                  : "Enviar FitScore"
-              }
-              onClick={handleSendFitScore}
-              disabled={createFitScoreMutation.isPending || hasSentFitScore}
-              sx={{ mt: 2 }}
-            />
-          )}
         </Box>
       </Box>
     );
@@ -238,11 +181,67 @@ export default function FitScorePage() {
             <StyledButton
               key={opt.value}
               label={opt.label}
-              onClick={() => handleAnswer(opt.value)}
+              onClick={() => handleSelectOption(opt.value)}
+              sx={{
+                background:
+                  currentAnswer === opt.value
+                    ? `linear-gradient(135deg, ${systemColors.indigo[700]} 20%, ${systemColors.indigo[900]} 90%)`
+                    : undefined,
+                color:
+                  currentAnswer === opt.value
+                    ? systemColors.gray[50]
+                    : undefined,
+                boxShadow:
+                  currentAnswer === opt.value
+                    ? `0px 4px 12px ${systemColors.indigo[400]}`
+                    : undefined,
+                "&:hover": {
+                  background:
+                    currentAnswer === opt.value
+                      ? `linear-gradient(135deg, ${systemColors.indigo[800]} 20%, ${systemColors.indigo[900]} 90%)`
+                      : undefined,
+                },
+                transition: "all 0.2s",
+              }}
             />
           ))}
+
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
+            <StyledButton
+              label={<FaArrowLeft size={28} />}
+              onClick={handleBack}
+              disabled={currentIndex === 0}
+              sx={{ minWidth: 60, minHeight: 50, padding: 1.5 }}
+            />
+            {currentIndex < questions.length - 1 &&
+              currentAnswer !== undefined && (
+                <StyledButton
+                  label={<FaArrowRight size={28} />}
+                  onClick={handleNext}
+                  sx={{ minWidth: 60, minHeight: 50, padding: 1.5 }}
+                />
+              )}
+          </Box>
         </Box>
       </Card>
+
+      {allAnswered &&
+        !myFitScore.hasFitScore &&
+        currentIndex === questions.length - 1 &&
+        currentAnswer !== undefined && (
+          <Box sx={{ mt: 4 }}>
+            <StyledButton
+              label={
+                createFitScoreMutation.isPending
+                  ? "Enviando..."
+                  : "Enviar FitScore"
+              }
+              onClick={handleSendFitScore}
+              disabled={createFitScoreMutation.isPending}
+              sx={{ minWidth: 200, padding: "12px 16px" }}
+            />
+          </Box>
+        )}
     </Box>
   );
 }

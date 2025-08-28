@@ -2,6 +2,6 @@ import { ButtonProps } from "@mui/material";
 
 export interface SubmitButtonProps extends ButtonProps {
   isLoading?: boolean;
-  label: string;
+  label: React.ReactNode;
   uppercase?: boolean;
 }
