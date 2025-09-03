@@ -2,6 +2,7 @@
   "congratsTitle": "Parabéns!",
   "congratsDescription": "Você completou o Mini FitScore™. Seu resultado será disponibilizado em breve.",
   "congratsMotivation": "Continue se dedicando e evoluindo! Cada passo conta para o seu sucesso profissional.",
+  "checkProfileButton": "Confira se já está disponível no seu perfil",
   "questionLabel": "Pergunta {{index}} de {{total}}",
   "categoryLabel": "Categoria: {{category}}",
   "questions": {
@@ -27,7 +28,7 @@
     },
     "p3": {
       "category": "Performance",
-  "question": "Como você avalia o seu domínio das habilidades técnicas necessárias para a função?",
+      "question": "Como você avalia o seu domínio das habilidades técnicas necessárias para a função?",
       "options": {
         "0": "Nenhuma",
         "1": "Algumas",

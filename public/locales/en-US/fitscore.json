@@ -2,6 +2,7 @@
   "congratsTitle": "Congratulations!",
   "congratsDescription": "You have completed the Mini FitScore™. Your result will be available soon.",
   "congratsMotivation": "Keep dedicating yourself and growing! Every step counts toward your professional success.",
+  "checkProfileButton": "See if it's already in your profile",
   "questionLabel": "Question {{index}} of {{total}}",
   "categoryLabel": "Category: {{category}}",
   "questions": {

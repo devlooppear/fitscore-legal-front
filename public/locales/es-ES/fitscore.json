@@ -2,6 +2,7 @@
   "congratsTitle": "¡Felicidades!",
   "congratsDescription": "Has completado el Mini FitScore™. Tu resultado estará disponible pronto.",
   "congratsMotivation": "¡Sigue esforzándote y creciendo! Cada paso cuenta para tu éxito profesional.",
+  "checkProfileButton": "Ver si ya está disponible en tu perfil",
   "questionLabel": "Pregunta {{index}} de {{total}}",
   "categoryLabel": "Categoría: {{category}}",
   "questions": {
@@ -27,7 +28,7 @@
     },
     "p3": {
       "category": "Rendimiento",
-  "question": "¿Cómo evalúas tu dominio de las habilidades técnicas necesarias para el puesto?",
+      "question": "¿Cómo evalúas tu dominio de las habilidades técnicas necesarias para el puesto?",
       "options": {
         "0": "Ninguna",
         "1": "Algunas",

@@ -11,12 +11,16 @@ import StyledButton from "@/components/StyledButton/StyledButton";
 import Loader from "@/components/Loader/Loader";
 import systemColors from "@/common/constants/systemColors";
 import { calculateFitScore } from "@/common/utils/calculateFitScore";
+import { useNavTo } from "@/hooks/useNavTo/useNavTo";
+import { Routes } from "@/common/constants/routes";
 
 export default function FitScorePage() {
   const { t } = useTranslation("fitscore");
   const { answers, setAnswer } = useFitScoreAnswers();
   const createFitScoreMutation = useCreateFitScore();
   const { myFitScore, refetch, isLoading, isError, error } = useMyFitScore();
+
+  const { navTo } = useNavTo();
 
   const questions = Array.from({ length: 10 }, (_, i) => {
     const key = `p${i + 1}`;
@@ -135,6 +139,20 @@ export default function FitScorePage() {
           >
             {t("congratsMotivation")}
           </Typography>
+          <StyledButton
+            label={t("checkProfileButton")}
+            onClick={() => {
+              navTo(Routes.PROFILE);
+            }}
+            sx={{
+              mt: 3,
+              px: 4,
+              py: 1.5,
+              width: { xs: "100%", sm: "auto" },
+              alignSelf: "center",
+              boxShadow: `0px 4px 12px ${systemColors.indigo[200]}`,
+            }}
+          />
         </Box>
       </Box>
     );

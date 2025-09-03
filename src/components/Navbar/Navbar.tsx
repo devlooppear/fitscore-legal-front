@@ -103,7 +103,9 @@ export default function Navbar() {
 
       <Box sx={{ pb: 2 }}>
         <Divider sx={{ bgcolor: systemColors.blue[200], mb: 1 }} />
-        <Box sx={{ color: "white", width: "100%", maxWidth: "200px", mx: "auto" }}>
+        <Box
+          sx={{ color: "white", width: "100%", maxWidth: "200px", mx: "auto" }}
+        >
           <LanguageSwitcher />
         </Box>
         <List>
@@ -169,7 +171,10 @@ export default function Navbar() {
           <Logo size="small" canNav />
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {isAuthenticated && (
-              <IconButton color="inherit">
+              <IconButton
+                color="inherit"
+                onClick={() => navTo(Routes.NOTIFICATIONS)}
+              >
                 <Badge badgeContent={totalNotifications} color="error">
                   <NotificationsIcon />
                 </Badge>
